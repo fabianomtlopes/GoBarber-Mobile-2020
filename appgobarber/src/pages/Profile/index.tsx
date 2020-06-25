@@ -50,7 +50,7 @@ const Profile: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const confirmPasswordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(
+  const handleUpdate = useCallback(
     async (data: ProfileFormData) => {
       try {
         formRef.current?.setErrors({});
@@ -177,13 +177,19 @@ const Profile: React.FC = () => {
             </BackButton>
 
             <UserAvatarButton onPress={handleUpdateAvatar}>
-              <UserAvatar source={{ uri: user.avatar_url }} />
+              <UserAvatar
+                source={{
+                  uri:
+                    user.avatar_url ||
+                    'https://api.adorable.io/avatars/186/abott@adorable.png',
+                }}
+              />
             </UserAvatarButton>
 
             <View>
               <Title>Meu perfil</Title>
             </View>
-            <Form initialData={user} ref={formRef} onSubmit={handleSignUp}>
+            <Form initialData={user} ref={formRef} onSubmit={handleUpdate}>
               <Input
                 autoCapitalize="words"
                 name="name"
@@ -204,15 +210,13 @@ const Profile: React.FC = () => {
                 icon="mail"
                 placeholder="E-mail"
                 returnKeyType="next"
-                onSubmitEditing={() => {
-                  oldPasswordInputRef.current?.focus();
-                }}
+                onSubmitEditing={() => oldPasswordInputRef.current?.focus()}
               />
 
               <Input
-                secureTextEntry
                 ref={oldPasswordInputRef}
-                name="password"
+                secureTextEntry
+                name="old_password"
                 icon="lock"
                 placeholder="Senha atual"
                 textContentType="newPassword"
